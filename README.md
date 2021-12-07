@@ -14,6 +14,9 @@
  * Copyright 2021 ForgeRock AS.
 -->
 
+![image](https://storage.googleapis.com/perimeterx-logos/primary_logo_red_cropped.png)
+
+
 # pxVerificationNode
 
 PerimeterX Bot Defender node for [Identity Platform][forgerock_platform] 7.1.0 and above. This node handles the PerimeterX request verification process and output a boolean response for the verification result.
