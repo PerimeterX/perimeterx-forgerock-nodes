@@ -22,7 +22,7 @@
 
     <artifactId>pxNodes</artifactId>
 
-    <groupId>com.perimeterx.BD.nodes</groupId>
+    <groupId>com.perimeterx</groupId>
     <version>0.0.0</version>    
     <name>Template for an Auth Tree Node maven project</name>
     <description>An Authentication Tree Node for ForgeRock's Identity Platform</description>
