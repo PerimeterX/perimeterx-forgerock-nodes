@@ -16,17 +16,13 @@
 
 package com.perimeterx.BD.nodes;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.forgerock.openam.auth.node.api.AbstractNodeAmPlugin;
 import org.forgerock.openam.auth.node.api.Node;
 import org.forgerock.openam.plugins.PluginException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Definition of an <a href=
@@ -35,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * available via Guice dependency injection. For example, if you want to add an
  * SMS service on install, you
  * can add the following setter:
- * 
+ *
  * <pre>
  * <code>
  * {@code @Inject}
@@ -44,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * }
  * </code>
  * </pre>
- * 
+ *
  * So that you can use the addSmsService api to load your schema XML for
  * example.
  * PluginTools javadoc may be found
@@ -71,12 +67,12 @@ import org.slf4j.LoggerFactory;
  * called, with dependent plugins being
  * notified after their dependencies for startup, and before them for shutdown.
  * </p>
- * 
+ *
  * @since AM 5.5.0
  */
-public class pxChallengeNodePlugin extends AbstractNodeAmPlugin {
+public class pxNodesPlugin extends AbstractNodeAmPlugin {
 
-    static private String currentVersion = "1.0.0";
+    static private String currentVersion = "0.0.0";
 
     /**
      * Specify the Map of list of node classes that the plugin is providing. These
@@ -87,8 +83,9 @@ public class pxChallengeNodePlugin extends AbstractNodeAmPlugin {
      */
     @Override
     protected Map<String, Iterable<? extends Class<? extends Node>>> getNodesByVersion() {
-        return Collections.singletonMap(pxChallengeNodePlugin.currentVersion,
-                Collections.singletonList(pxChallengeNode.class));
+        return Collections.singletonMap(pxNodesPlugin.currentVersion,
+                Arrays.asList(pxVerificationNode.class,
+                        pxChallengeNode.class));
     }
 
     /**
@@ -96,7 +93,7 @@ public class pxChallengeNodePlugin extends AbstractNodeAmPlugin {
      * startup once the plugin
      * is included in the classpath. The {@link #onStartup()} method will be called
      * after this one.
-     * 
+     *
      * No need to implement this unless your AuthNode has specific requirements on
      * install.
      */
@@ -110,7 +107,7 @@ public class pxChallengeNodePlugin extends AbstractNodeAmPlugin {
      * {@link #onInstall()},
      * {@link #onAmUpgrade(String, String)} and {@link #upgrade(String)} have been
      * called (if relevant).
-     * 
+     *
      * No need to implement this unless your AuthNode has specific requirements on
      * startup.
      *
@@ -126,7 +123,7 @@ public class pxChallengeNodePlugin extends AbstractNodeAmPlugin {
      * {@link #getPluginVersion()} is higher than the
      * version already installed. This method will be called before the
      * {@link #onStartup()} method.
-     * 
+     *
      * No need to implement this untils there are multiple versions of your auth
      * node.
      *
@@ -134,7 +131,9 @@ public class pxChallengeNodePlugin extends AbstractNodeAmPlugin {
      */
     @Override
     public void upgrade(String fromVersion) throws PluginException {
-        super.upgrade(fromVersion);
+        pluginTools.upgradeAuthNode(pxVerificationNode.class);
+        pluginTools.upgradeAuthNode(pxChallengeNode.class);
+        // super.upgrade(fromVersion);
     }
 
     /**
@@ -147,6 +146,6 @@ public class pxChallengeNodePlugin extends AbstractNodeAmPlugin {
      */
     @Override
     public String getPluginVersion() {
-        return pxChallengeNodePlugin.currentVersion;
+        return pxNodesPlugin.currentVersion;
     }
 }
