@@ -30,6 +30,7 @@ import org.forgerock.openam.auth.node.api.Node;
 import org.forgerock.openam.auth.node.api.NodeProcessException;
 import org.forgerock.openam.auth.node.api.TreeContext;
 import org.forgerock.openam.core.realms.Realm;
+import org.forgerock.openam.sm.annotations.adapters.Password;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,14 +70,17 @@ public class pxVerificationNode extends AbstractDecisionNode {
         /**
          * The PerimeterX authentication token.
          */
+
         @Attribute(order = 11)
-        String pxAuthToken();
+        @Password
+        char[] pxAuthToken();
 
         /**
          * The PerimeterX cookie secret value.
          */
         @Attribute(order = 12)
-        String pxCookieSecret();
+        @Password
+        char[] pxCookieSecret();
 
         /**
          * A list of user-agents that the module should always allow.

@@ -46,7 +46,7 @@ public class PXS2SValidator implements PXValidator {
         cm.setMaxTotal(5);
         cm.setDefaultMaxPerRoute(5);
         httpClient = HttpClients.custom().setConnectionManager(cm)
-                .setDefaultHeaders(PXUtils.getDefaultHeaders(pxConfiguration.pxAuthToken())).build();
+                .setDefaultHeaders(PXUtils.getDefaultHeaders(String.valueOf(pxConfiguration.pxAuthToken()))).build();
     }
 
     private CloseableHttpResponse executeRiskAPICall(String requestBody, PXContext ctx) throws ConnectTimeoutException {
