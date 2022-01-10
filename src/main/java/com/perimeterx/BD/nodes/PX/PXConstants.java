@@ -25,7 +25,7 @@ public final class PXConstants {
     public static final String MOBILE_SDK_ORIGINAL_TOKEN_HEADER = "x-px-original-token";
     public static final String HEADER_ORIGIN = "header";
     public static final String COOKIE_HEADER_NAME = "cookie";
-    public static final String SDK_VERSION = "ForgeRock Module v0.0.1";
+    public static final String SDK_VERSION = "ForgeRock Module v0.1.0";
     public static final String SERVER_URL = "https://sapi-%s.perimeterx.net";
     public static final String COLLECTOR_URL = "https://collector-%s.perimeterx.net";
     public static final String API_RISK = "/api/v3/risk";
