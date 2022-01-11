@@ -22,19 +22,22 @@ PerimeterX Bot Defender nodes for [Identity Platform][forgerock_platform] 7.1.0 
 
 ## Installation
 
-Copy the .jar files from the ../target directory into the ../web-container/webapps/openam/WEB-INF/lib directory where AM is deployed. Restart the web container to pick up the new node. The node will then appear in the authentication trees components palette.
+To deploy these nodes, download the jar from the releases tab on github
+[here](https://github.com/PerimeterX/perimeterx-forgerock-nodes/releases). Next, copy the jar into the ../web-container/webapps/openam/WEB-INF/lib directory where AM is deployed. Restart the web container to pick up the new node. The node will then appear in the authentication trees components palette.
 
 ## Usage
 
 Drag the node to your journey and connect it after the Data Store Decision node. Connect the `true` output to your success node and the `false` output to the **pxChallengeNode** in order to show the challenge page for a blocked request. Finally, connect **pxChallengeNode** to the red X:
 
-![ScreenShot](./pxChallengeNode_connect.png).
+![ScreenShot](./images/pxTreeExample.png).
 
 Make sure to fill in the required node properties for the **pxVerificationNode** node. You can find all the required data on the [PerimeterX Console](https://console.perimeterx.com).
 
+![ScreenShot](./images/pxConsole.png)
+
 When a request gets blocked, the default challenge page will be shown, as follows:
 
-![ScreenShot](./block_page_screenshot.png)
+![ScreenShot](./images/pxChallengePage.png)
 
 # pxVerificationNode
 
