@@ -29,7 +29,7 @@ To deploy these nodes, download the jar from the releases tab on github
 
 Drag the node to your journey and connect it after the Data Store Decision node. Connect the `true` output to your success node and the `false` output to the **pxChallengeNode** in order to show the challenge page for a blocked request. Finally, connect **pxChallengeNode** to the red X:
 
-![ScreenShot](./images/pxTreeExample.png).
+![ScreenShot](./images/pxTreeExample.png)
 
 Make sure to fill in the required node properties for the **pxVerificationNode** node. You can find all the required data on the [PerimeterX Console](https://console.perimeterx.com).
 
