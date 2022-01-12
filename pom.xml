@@ -24,8 +24,8 @@
 
     <groupId>com.perimeterx</groupId>
     <version>1.0.0</version>    
-    <name>Template for an Auth Tree Node maven project</name>
-    <description>An Authentication Tree Node for ForgeRock's Identity Platform</description>
+    <name>PerimeterX Auth Nodes</name>
+    <description>PerimeterX Bot Defender nodes for Identity Platform 7.1.0 and above.</description>
 
     <properties>
         <am.version>7.1.0</am.version>

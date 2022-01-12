@@ -16,7 +16,12 @@
 
 package com.perimeterx.BD.nodes;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -63,6 +68,23 @@ public class pxChallengeNode extends SingleOutcomeNode {
         }
     }
 
+    public static String readFileString(String path) {
+        try {
+            InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            String data = readAllLines(in);
+            in.close();
+            return data;
+        } catch (NullPointerException | IOException e) {
+            logger.error("Can´t read file " + path, e);
+            return null;
+        }
+    }
+
+    public static String readAllLines(InputStream in) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        return reader.lines().parallel().collect(Collectors.joining("\n"));
+    }
+
     /**
      * Create the node using Guice injection. Just-in-time bindings can be used to
      * obtain instances of other classes
@@ -93,123 +115,26 @@ public class pxChallengeNode extends SingleOutcomeNode {
     }
 
     private String getScript(TreeContext context) {
-        String appId = context.sharedState.get("appId").asString();
+
         String refId = context.sharedState.get("refId").asString();
-        String vid = context.sharedState.get("vid").asString();
-        String uuid = context.sharedState.get("uuid").asString();
-        String cssRef = this.config.pxCssRef();
-        String jsRef = this.config.pxJsRef();
-        String hostUrl = context.sharedState.get("hostUrl").asString();
-        String blockScript = context.sharedState.get("blockScript").asString();
+
+        String appId = context.sharedState.get("appId").asString();
         String jsClientSrc = context.sharedState.get("jsClientSrc").asString();
         boolean firstPartyEnabled = context.sharedState.get("firstPartyEnabled").asBoolean();
+        String vid = context.sharedState.get("vid").asString();
+        String uuid = context.sharedState.get("uuid").asString();
+        String hostUrl = context.sharedState.get("hostUrl").asString();
+        String blockScript = context.sharedState.get("blockScript").asString();
 
-        StringBuffer script = new StringBuffer()
-                .append("document.head.insertAdjacentHTML(\"beforeend\", \"<style>.px-container{align-items:center;display:flex;flex:1;justify-content:space-between;flex-direction:column;height:100%}.px-container>div{width:100%;display:flex;justify-content:center}.px-container>div>div{display:flex;width:80%}.page-title-wrapper{flex-grow:2}.page-title{flex-direction:column-reverse}.content-wrapper{flex-grow:5}.content{flex-direction:column}.page-footer-wrapper{align-items:center;flex-grow:.2;background-color:#000;color:#c5c5c5;font-size:70%}.content p{margin:14px 0;}</style>\");\n")
-                .append("submitted = true;\n")
-                .append("\n")
-                .append("function createElement(type, classes, attributes, styles) {\n")
-                .append("    const elm = document.createElement(type);\n")
-                .append("    if (classes && classes.length > 0) {\n")
-                .append("        classes.forEach((e) => {\n")
-                .append("            elm.classList.add(e);\n")
-                .append("        });\n")
-                .append("    }\n")
-                .append("    if (attributes) {\n")
-                .append("        Object.keys(attributes).forEach((k) => {\n")
-                .append("            elm.setAttribute(k, attributes[k]);\n")
-                .append("        });\n")
-                .append("    }\n")
-                .append("    if (styles) {\n")
-                .append("         Object.keys(styles).forEach((k) => {\n")
-                .append("             elm.style[k] = styles[k];\n")
-                .append("         });\n")
-                .append("    }\n")
-                .append("    return elm;\n")
-                .append("}\n")
-                .append("function insertAfter(el, referenceNode) {\n")
-                .append("    referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);\n")
-                .append("}\n")
-                .append("\n")
-                .append("function callback() {\n")
-                .append("    const container = document.createElement(\"div\");\n")
-                .append("    container.classList.add(\"px-container\");\n")
-                .append("    const pageTitleWrapper = createElement('div', ['page-title-wrapper']);\n")
-                .append("    const pageTitle = createElement('div', ['page-title']);\n")
-                .append("    const title = createElement('h1');\n")
-                .append("    title.innerText = 'Please verify you are a human';\n")
-                .append("    pageTitle.appendChild(title);\n")
-                .append("    pageTitleWrapper.appendChild(pageTitle);\n")
-                .append("    const contentWrapper = createElement('div', ['content-wrapper']);\n")
-                .append("    const content = createElement('div', ['content']);\n")
-                .append("    const pxCaptcha = createElement('div', null, { id: 'px-captcha' });\n")
-                .append("    content.appendChild(pxCaptcha);\n")
-                .append("    const p1 = createElement('p');\n")
-                .append("    p1.innerText = 'Access to this page has been denied because we believe you are using automation tools to browse the website.';\n")
-                .append("    content.appendChild(p1);\n")
-                .append("    const p2 = createElement('p');\n")
-                .append("    p2.innerText = 'This may happen as a result of the following:';\n")
-                .append("    content.appendChild(p2);\n")
-                .append("    const ul = createElement('ul');\n")
-                .append("    const li1 = createElement('li');\n")
-                .append("    li1.innerText = 'Javascript is disabled or blocked by an extension (ad blockers for example)';\n")
-                .append("    ul.appendChild(li1);\n")
-                .append("    const li2 = createElement('li');\n")
-                .append("    li2.innerText = 'Your browser does not support cookies';\n")
-                .append("    ul.appendChild(li2);\n")
-                .append("    content.appendChild(ul);\n")
-                .append("    const p3 = createElement('p');\n")
-                .append("    p3.innerText = 'Please make sure that Javascript and cookies are enabled on your browser and that you are not blocking them from loading.';\n")
-                .append("    content.appendChild(p3);\n")
-                .append("    const p4 = createElement('p');\n")
-                .append("    p4.innerText = 'Reference ID: #" + refId + "';\n")
-                .append("    content.appendChild(p4);\n")
-                .append("    contentWrapper.appendChild(content);\n")
-                .append("    const pageFooterWrapper = createElement('div', ['page-footer-wrapper']);\n")
-                .append("    const pageFooter = createElement('div', ['page-footer']);\n")
-                .append("    const preLink = createElement('span');\n")
-                .append("    preLink.innerText = 'Powered by\u00A0';\n")
-                .append("    const link = createElement('a', null, { href: 'https://www.perimeterx.com/whywasiblocked' });\n")
-                .append("    link.innerText = '\u00A0PerimeterX';\n")
-                .append("    const postLink = createElement('span');\n")
-                .append("    postLink.innerText = ' , Inc.';\n")
+        String cssRef = this.config.pxCssRef();
+        String jsRef = this.config.pxJsRef();
 
-                .append("    pageFooter.appendChild(preLink);\n")
-                .append("    pageFooter.appendChild(link);\n")
-                .append("    pageFooter.appendChild(postLink);\n")
-                .append("    pageFooterWrapper.appendChild(pageFooter);\n")
-
-                .append("    container.appendChild(pageTitleWrapper);\n")
-                .append("    container.appendChild(contentWrapper);\n")
-                .append("    container.appendChild(pageFooterWrapper);\n")
-                .append("    document.querySelector(\".page-header\").remove();\n")
-                .append("    document.forms[0].remove();\n")
-                .append("    const anchor = document.querySelector(\".container\");\n")
-                .append("    anchor.appendChild(container);\n")
-
-                .append(getCssRefValue(cssRef))
-                .append(getJSRefValue(jsRef))
-
-                .append("    window._pxAppId='" + appId + "';\n")
-                .append("    window._pxJsClientSrc='" + jsClientSrc + "';\n")
-                .append("    window._pxFirstPartyEnabled=" + firstPartyEnabled + ";\n")
-                .append("    window._pxVid='" + vid + "';\n")
-                .append("    window._pxUuid='" + uuid + "';\n")
-                .append("    window._pxHostUrl='" + hostUrl + "';\n")
-                .append("    const blockScript = document.createElement('script');\n")
-                .append("    blockScript.src = '" + blockScript + "';\n")
-                .append("    const head = document.getElementsByTagName('head')[0];\n")
-                .append("    head.insertBefore(blockScript, null);\n")
-                .append("}\n")
-                .append("\n")
-                .append("if (document.readyState !== 'loading') {\n")
-                .append("  callback();\n")
-                .append("} else {\n")
-                .append("  document.addEventListener(\"DOMContentLoaded\", callback);\n")
-                .append("}");
-
-        return script.toString();
+        String script = readFileString("/js/challenge-script.js");
+        script = String.format(script, refId, appId, jsClientSrc, firstPartyEnabled, vid, uuid, hostUrl, blockScript);
+        script =  script + getCssRefValue(cssRef) + getJSRefValue(jsRef);
+        return script;
     }
+
 
     private String getCssRefValue(String cssRef) {
         logger.debug("reached getCssRefValue: {}", cssRef);
